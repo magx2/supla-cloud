@@ -149,6 +149,11 @@ class User implements AdvancedUserInterface, EncoderAwareInterface {
     private $limitDirectLink;
 
     /**
+     * @ORM\Column(name="limit_scenes", type="integer", options={"default"=50})
+     */
+    private $limitScenes;
+
+    /**
      * @ORM\Column(name="limit_oauth_client", type="integer", options={"default"=20})
      */
     private $limitOAuthClient;
@@ -203,6 +208,11 @@ class User implements AdvancedUserInterface, EncoderAwareInterface {
      * @ORM\OneToMany(targetEntity="DirectLink", mappedBy="user", cascade={"persist"})
      */
     private $directLinks;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Scene", mappedBy="user", cascade={"persist"})
+     */
+    private $scenes;
 
     /**
      * @ORM\OneToMany(targetEntity="AuditEntry", mappedBy="user", cascade={"persist"})
@@ -453,6 +463,11 @@ class User implements AdvancedUserInterface, EncoderAwareInterface {
         return $this->directLinks;
     }
 
+    /** @return Collection|Scene[] */
+    public function getScenes() {
+        return $this->scenes;
+    }
+
     /** @return Collection|Location[] */
     public function getLocations(): Collection {
         return $this->locations;
@@ -516,6 +531,10 @@ class User implements AdvancedUserInterface, EncoderAwareInterface {
 
     public function isLimitDirectLinkExceeded() {
         return $this->limitDirectLink > 0 && count($this->getDirectLinks()) >= $this->limitDirectLink;
+    }
+
+    public function isLimitScenesExceeded() {
+        return $this->limitScenes > 0 && count($this->getScenes()) >= $this->limitScenes;
     }
 
     public function isLimitOAuthClientExceeded() {
